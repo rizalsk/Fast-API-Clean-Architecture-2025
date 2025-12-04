@@ -5,13 +5,17 @@ from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.database.session import SessionLocal
 from app.services.auth_service import AuthService
 from app.services.user_service import UserService
-from app.schemas.auth import LoginSchema, TokenSchema, TokenRefreshRequest, TokenRefreshResponse
-from app.core.jwt import decode_access_token, verify_token, create_access_token
+from app.schemas.auth import LoginSchema, TokenSchema, TokenRefreshRequest, TokenRefreshResponse, LoginTokenSchema
+from app.core.jwt import verify_token
+from app.core.config import settings
 from app.repositories.user_repository import UserRepository
 import logging
 
 log = logging.getLogger("uvicorn.error")
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+ACCESS_EXPIRES = settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+REFRESH_EXPIRES = settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
 
 def get_db():
     db = SessionLocal()
@@ -55,22 +59,30 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return service.register(user.username, user.email, user.password)
 
 
-@router.post("/login", response_model=TokenSchema)
+# @router.post("/login", response_model=LoginTokenSchema)
+@router.post("/login", response_model=LoginTokenSchema)
 def login(payload: LoginSchema, db: Session = Depends(get_db)):
     tokens = AuthService.login(db, payload.email, payload.password)
+    user = UserRepository.find_by_email(db, payload.email)
     if not tokens:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password"
         )
 
-    access, refresh = tokens
-
-    return TokenSchema(
+    access, refresh, test = tokens
+    log.info(f"access, refresh, user: {user.email}")
+    return LoginTokenSchema(
         access_token=access,
-        refresh_token=refresh
+        refresh_token=refresh,
+        expires_in=ACCESS_EXPIRES,
+        refresh_expires_in=REFRESH_EXPIRES,
+        user=UserResponse.model_validate(user)
     )
-
+    # try:
+    # except ValueError as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
+    
 @router.post("/refresh", response_model=TokenRefreshResponse)
 def refresh_token(data: TokenRefreshRequest):
     """

@@ -18,19 +18,6 @@ class AuthService:
     # def __init__(self, db: Session):
     #     self.user_repo = UserRepository(db)
 
-    # def register(self, username: str, email: str, password: str):
-    #     hashed = hash_password(password)
-    #     user = User(username=username, email=email, password=hashed)
-    #     return self.user_repo.create(user)
-
-    # def login(self, email: str, password: str):
-    #     user = self.user_repo.get_by_email(email)
-    #     if user and verify_password(password, user.password):
-    #         access_token = create_access_token({"user_id": user.id})
-    #         refresh_token = create_refresh_token({"user_id": user.id})
-    #         return {"access_token": access_token, "refresh_token": refresh_token}
-    #     return None
-
     @staticmethod
     async def register(db: Session, username: str, email: str, password: str, name: str, avatar: UploadFile = None):
         hashed = hash_password(password)
@@ -55,7 +42,7 @@ class AuthService:
         access = create_access_token({"sub": str(user.id)})
         refresh = create_refresh_token({"sub": str(user.id)})
 
-        return access, refresh
+        return access, refresh, user
 
     @staticmethod
     def get_current_user(db, token: str):

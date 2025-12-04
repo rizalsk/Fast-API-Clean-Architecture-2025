@@ -20,19 +20,6 @@ class UserRepository:
         self.db.commit()
         self.db.refresh(user)
         return user
-    # @staticmethod
-    # def create(db: Session, data):
-    #     hashed = bcrypt.hash(data.password)
-    #     new_user = User(
-    #         username=data.username,
-    #         email=data.email,
-    #         name=data.name,
-    #         password=hashed
-    #     )
-    #     db.add(new_user)
-    #     db.commit()
-    #     db.refresh(new_user)
-    #     return new_user
     @staticmethod
     def find_all(self):
         return self.query(User).all()
