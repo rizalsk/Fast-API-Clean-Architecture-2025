@@ -1,0 +1,133 @@
+from fastapi import APIRouter, Depends, HTTPException, Header, Form, UploadFile, File
+from sqlalchemy.orm import Session
+from fastapi import status
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.database.session import SessionLocal
+from app.services.auth_service import AuthService
+from app.services.user_service import UserService
+from app.schemas.auth import LoginSchema, TokenSchema, TokenRefreshRequest, TokenRefreshResponse
+from app.core.jwt import decode_access_token, verify_token, create_access_token
+from app.repositories.user_repository import UserRepository
+import logging
+
+log = logging.getLogger("uvicorn.error")
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def get_current_user(Authorization: str = Header(...), db: Session = Depends(get_db)):
+    """
+    Extract JWT from Authorization header.
+    Expected format: 'Bearer <token>'
+    """
+    if not Authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid authorization header")
+
+    token = Authorization.split(" ")[1]
+
+    try:
+        payload = verify_token(token)
+        if not payload:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+        user_id = int(payload["sub"])
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid token payload")
+
+        user = UserRepository.find_by_id(db, user_id)
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        return user
+
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+
+@router.post("/register", response_model=UserResponse)
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    service = AuthService(db)
+    return service.register(user.username, user.email, user.password)
+
+
+@router.post("/login", response_model=TokenSchema)
+def login(payload: LoginSchema, db: Session = Depends(get_db)):
+    tokens = AuthService.login(db, payload.email, payload.password)
+    if not tokens:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
+
+    access, refresh = tokens
+
+    return TokenSchema(
+        access_token=access,
+        refresh_token=refresh
+    )
+
+@router.post("/refresh", response_model=TokenRefreshResponse)
+def refresh_token(data: TokenRefreshRequest):
+    """
+    Refresh access token using refresh token (JSON body)
+    """
+    try:
+        new_tokens = AuthService.refresh_access_token(data.refresh_token)
+        return new_tokens
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail=str(e))
+
+@router.get("/me", response_model=UserResponse)
+def get_me(
+    db: Session = Depends(get_db),
+    authorization: str = Header(None)
+):
+    """
+    Return current authenticated user's profile based on JWT token.
+    """
+
+    if authorization is None or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid or missing authorization header")
+
+    token = authorization.split(" ")[1]
+
+    user = AuthService.get_current_user(db, token)
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    return user
+
+@router.put("/profile", response_model=UserResponse)
+async def update_profile(
+    username: str = Form(None),
+    email: str = Form(None),
+    name: str = Form(None),
+    password: str = Form(None),
+    password_confirmation: str = Form(None),
+    avatar: UploadFile = File(None),
+    db: Session = Depends(get_db),
+    current_user: int = Depends(get_current_user),
+):
+        data = UserUpdate(username=username, email=email, name=name)
+
+        updated_user = await UserService.update_profile(
+            db=db,
+            user_id=current_user.id,
+            data=data,
+            avatar=avatar,
+            password=password,
+            password_confirmation=password_confirmation,
+        )
+        return updated_user
+    # try:
+
+
+    # except Exception as e:
+    #     log.error("❌ Error while updating profile", exc_info=True)
+    #     raise HTTPException(status_code=500, detail=f"{str(e)}")

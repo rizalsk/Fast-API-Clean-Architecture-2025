@@ -1,0 +1,66 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+env/
+.venv/
+.env/
+pythonenv/
+
+# -------------------------
+# FastAPI / Uvicorn / Logs
+# -------------------------
+*.log
+logs/
+uvicorn.log
+
+# -------------------------
+# Environment Variables
+# -------------------------
+.env
+
+# -------------------------
+# IDE / Editor files
+# -------------------------
+.vscode/
+.idea/
+*.iml
+
+# -------------------------
+# Byte-compiled / Cache
+# -------------------------
+.cache/
+.mypy_cache/
+.pytest_cache/
+coverage.xml
+htmlcov/
+
+# -------------------------
+# Alembic
+# -------------------------
+alembic/versions/*.pyc
+alembic.ini~
+
+.DS_Store
+Thumbs.db
+
+uploads/
+files/
+media/
+assets/uploads/
+
+# -------------------------
+# Docker
+# -------------------------
+*.pid
+*.tar
