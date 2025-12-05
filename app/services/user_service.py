@@ -56,7 +56,6 @@ class UserService:
         if not user:
             raise ValueError("User not found")
 
-        # Apply simple fields
         if data.username is not None:
             user.username = data.username
         if data.email is not None:
@@ -69,9 +68,7 @@ class UserService:
                 raise ValueError("Password confirmation miss match!")
 
 
-        # Avatar update
         if avatar is not None:
-            # delete old avatar
             if user.avatar:
                 FileService.delete(user.avatar)
 

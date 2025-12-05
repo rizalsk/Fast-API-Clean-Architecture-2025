@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
-from app.schemas.banner_image import BannerImageResponse
 
 class BannerImageSchema(BaseModel):
     id: int

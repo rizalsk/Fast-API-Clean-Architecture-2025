@@ -9,85 +9,43 @@ from app.schemas.auth import LoginSchema, TokenSchema, TokenRefreshRequest, Toke
 from app.core.jwt import verify_token
 from app.core.config import settings
 from app.repositories.user_repository import UserRepository
-import logging
+from app.dependencies.logger import log
+from app.dependencies.auth import get_db, get_current_user
 
-log = logging.getLogger("uvicorn.error")
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 ACCESS_EXPIRES = settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
 REFRESH_EXPIRES = settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-def get_current_user(Authorization: str = Header(...), db: Session = Depends(get_db)):
-    """
-    Extract JWT from Authorization header.
-    Expected format: 'Bearer <token>'
-    """
-    if not Authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Invalid authorization header")
-
-    token = Authorization.split(" ")[1]
-
-    try:
-        payload = verify_token(token)
-        if not payload:
-            raise HTTPException(status_code=401, detail="Invalid or expired token")
-
-        user_id = int(payload["sub"])
-        if not user_id:
-            raise HTTPException(status_code=401, detail="Invalid token payload")
-
-        user = UserRepository.find_by_id(db, user_id)
-        if not user:
-            raise HTTPException(status_code=401, detail="User not found")
-
-        return user
-
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     service = AuthService(db)
     return service.register(user.username, user.email, user.password)
 
-
-# @router.post("/login", response_model=LoginTokenSchema)
 @router.post("/login", response_model=LoginTokenSchema)
 def login(payload: LoginSchema, db: Session = Depends(get_db)):
-    tokens = AuthService.login(db, payload.email, payload.password)
-    user = UserRepository.find_by_email(db, payload.email)
-    if not tokens:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password"
-        )
+    try:
+        tokens = AuthService.login(db, payload.email, payload.password)
+        user = UserRepository.find_by_email(db, payload.email)
+        if not tokens:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password"
+            )
 
-    access, refresh, test = tokens
-    log.info(f"access, refresh, user: {user.email}")
-    return LoginTokenSchema(
-        access_token=access,
-        refresh_token=refresh,
-        expires_in=ACCESS_EXPIRES,
-        refresh_expires_in=REFRESH_EXPIRES,
-        user=UserResponse.model_validate(user)
-    )
-    # try:
-    # except ValueError as e:
-    #     raise HTTPException(status_code=500, detail=str(e))
+        access, refresh, test = tokens
+        return LoginTokenSchema(
+            access_token=access,
+            refresh_token=refresh,
+            expires_in=ACCESS_EXPIRES,
+            refresh_expires_in=REFRESH_EXPIRES,
+            user=UserResponse.model_validate(user)
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 @router.post("/refresh", response_model=TokenRefreshResponse)
 def refresh_token(data: TokenRefreshRequest):
-    """
-    Refresh access token using refresh token (JSON body)
-    """
     try:
         new_tokens = AuthService.refresh_access_token(data.refresh_token)
         return new_tokens
@@ -99,9 +57,6 @@ def get_me(
     db: Session = Depends(get_db),
     authorization: str = Header(None)
 ):
-    """
-    Return current authenticated user's profile based on JWT token.
-    """
 
     if authorization is None or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Invalid or missing authorization header")
@@ -126,6 +81,7 @@ async def update_profile(
     db: Session = Depends(get_db),
     current_user: int = Depends(get_current_user),
 ):
+    try:
         data = UserUpdate(username=username, email=email, name=name)
 
         updated_user = await UserService.update_profile(
@@ -137,9 +93,6 @@ async def update_profile(
             password_confirmation=password_confirmation,
         )
         return updated_user
-    # try:
-
-
-    # except Exception as e:
-    #     log.error("❌ Error while updating profile", exc_info=True)
-    #     raise HTTPException(status_code=500, detail=f"{str(e)}")
+    except Exception as e:
+        log.error("❌ Error while updating profile", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"{str(e)}")

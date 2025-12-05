@@ -9,10 +9,9 @@ from app.core.jwt import decode_access_token, verify_token
 from app.core.security import hash_password
 import os
 import uuid
+from app.dependencies.logger import log
 
 UPLOAD_DIR = "app/assets/uploads"
-
-log = logging.getLogger("uvicorn.error")
 
 class AuthService:
     # def __init__(self, db: Session):

@@ -12,31 +12,30 @@ def get_db():
     finally:
         db.close()
 
+def get_current_user(Authorization: str = Header(...), db: Session = Depends(get_db)):
 
-def get_current_user(
-    Authorization: str = Header(...),
-    db: Session = Depends(get_db)
-):
-    """
-    Extract user from JWT Authorization header.
-    """
     if not Authorization.startswith("Bearer "):
-        raise HTTPException(401, "Invalid authorization header")
+        raise HTTPException(status_code=401, detail="Invalid authorization header")
 
     token = Authorization.split(" ")[1]
 
     try:
         payload = verify_token(token)
+        if not payload:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+
         user_id = int(payload["sub"])
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid token payload")
 
         user = UserRepository.find_by_id(db, user_id)
         if not user:
-            raise HTTPException(401, "User not found")
+            raise HTTPException(status_code=401, detail="User not found")
 
         return user
 
     except Exception:
-        raise HTTPException(401, "Invalid or expired token")
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
 def get_current_user_id(
