@@ -11,7 +11,7 @@ collection:
     meta:
       id: fld_a2727ac7d0e14b62a2d49b9abea43c01
       created: 1764131798115
-      modified: 1764815996333
+      modified: 1764902370252
       sortKey: -1764131798115
       description: ""
     children:
@@ -329,7 +329,7 @@ collection:
         meta:
           id: req_b840a5eff38a43808642d907c7894645
           created: 1764582340718
-          modified: 1764818890414
+          modified: 1764902359592
           isPrivate: false
           description: ""
           sortKey: -1764132025226
@@ -341,13 +341,13 @@ collection:
               value: sunt aut facere repellat provident occaecati excepturi optio
                 reprehenderit updated
               description: ""
-              disabled: false
+              disabled: true
             - name: content
               value: quia et suscipit\nsuscipit recusandae consequuntur expedita et
                 cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est
                 autem sunt rem eveniet architecto
               description: ""
-              disabled: false
+              disabled: true
             - name: cover_image
               value: ""
               description: ""
@@ -357,7 +357,7 @@ collection:
             - name: banners[]
               value: ""
               description: ""
-              disabled: true
+              disabled: false
               fileName: D:\images\bg-img3.jpg
               type: file
             - name: banners[]
@@ -369,7 +369,7 @@ collection:
             - name: remove_banner_ids
               value: "3"
               description: ""
-              disabled: false
+              disabled: true
         headers:
           - name: Content-Type
             value: multipart/form-data
@@ -619,16 +619,183 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: Email Tester
+    meta:
+      id: fld_bcfbe70b71ce404982151c7273f77485
+      created: 1764903966329
+      modified: 1764903966329
+      sortKey: -1764903966329
+      description: ""
+    children:
+      - url: "{{url}}/v1/email-test/send-text"
+        name: Send Text
+        meta:
+          id: req_53c711b287274b6eb88103460dc19510
+          created: 1764903975656
+          modified: 1764916483774
+          isPrivate: false
+          description: ""
+          sortKey: -1764903975656
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"to":"mail@example.com",
+            	"subject":"Email Text",
+            	"body":"<b>Hello email text</b>"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{% response 'body', 'req_f477d13cd81743deb5adbd9a8548b4cb',
+            'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{url}}/v1/email-test/send-template"
+        name: Send Template
+        meta:
+          id: req_87fde5d8375b4f188a213569847fc901
+          created: 1764907020858
+          modified: 1764916490435
+          isPrivate: false
+          description: ""
+          sortKey: -1764829219013.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"to":"mail@example.com",
+            	"subject":"Email Template",
+            	"body":"<b>Hello</b>"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{% response 'body', 'req_f477d13cd81743deb5adbd9a8548b4cb',
+            'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{url}}/v1/email-test/send-attachment"
+        name: Send Attachment
+        meta:
+          id: req_2ab95c2cc35b420a9559990332ca327a
+          created: 1764916460254
+          modified: 1764916504612
+          isPrivate: false
+          description: ""
+          sortKey: -1764791840692.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"to":"mail@example.com",
+            	"subject":"Email Attachment",
+            	"body":"<b>Hello</b>"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{% response 'body', 'req_f477d13cd81743deb5adbd9a8548b4cb',
+            'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{url}}/v1/email-test/send-attachment-upload"
+        name: Send Attachment Upload
+        meta:
+          id: req_07274f3486fc43ae925f8f368c3084b0
+          created: 1764916700756
+          modified: 1764917036108
+          isPrivate: false
+          description: ""
+          sortKey: -1764773151531.625
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: to
+              value: support@mail.com
+            - name: subject
+              value: Text Upload Attachment
+              description: ""
+              disabled: false
+            - name: body
+              value: Test Content Body
+              description: ""
+              disabled: false
+            - name: attachments[]
+              value: ""
+              description: ""
+              disabled: false
+              fileName: D:\images\bg-img4.jpg
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{% response 'body', 'req_f477d13cd81743deb5adbd9a8548b4cb',
+            'b64::JC5hY2Nlc3NfdG9rZW4=::46b', 'never', 60 %}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
     id: jar_5c8920289e1800b6e3c385a3020eeaf06f92b9b8
     created: 1759221874225
-    modified: 1764815996286
+    modified: 1764902370205
 environments:
   name: Base Environment
   meta:
     id: env_5c8920289e1800b6e3c385a3020eeaf06f92b9b8
     created: 1720424418966
-    modified: 1764815996292
+    modified: 1764902370223
     isPrivate: false
