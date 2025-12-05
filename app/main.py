@@ -3,6 +3,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from fastapi import FastAPI
+from app.routes.web import router as web_router
 from app.routes.api.auth.routes import router as auth_router
 from app.routes.api.v1.article import router as article_router
 from app.routes.api.v1.user import router as user_router
@@ -18,6 +19,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FastAPI Clean Architecture")
 
+app.include_router(web_router)
 app.include_router(auth_router)
 app.include_router(article_router)
 app.include_router(user_router)

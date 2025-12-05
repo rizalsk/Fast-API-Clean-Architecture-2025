@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/icons/fastapi.svg" type="image/x-icon">
+    <title>{{ app_name }}</title>
+    <style>
+        /* Reset & base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #00fff7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7, 0 0 30px #00fff7;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7, 0 0 30px #00fff7; }
+            to { text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7, 0 0 60px #00fff7; }
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #a0f0f0;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.5;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .btn {
+            margin-top: 40px;
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #0f2027;
+            background: #00fff7;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #00fff7;
+        }
+
+        .btn:hover {
+            background: #00c4b4;
+            box-shadow: 0 0 20px #00fff7;
+            transform: translateY(-5px);
+        }
+
+        /* Floating particles effect */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #00fff7;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float 10s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0);}
+            100% { transform: translateY(-10vh) translateX(50vw);}
+        }
+
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <h1>{{ app_name }}</h1>
+    <p>Welcome to a modern and elegant Backend Technologies.</p>
+    <button class="btn" onclick="alert('Welcome to the future!')">Get Started</button>
+
+    <script>
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        for(let i=0; i<50; i++){
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDuration = 5 + Math.random() * 10 + 's';
+            particle.style.width = 2 + Math.random() * 5 + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>
