@@ -18,7 +18,7 @@ def seed_users(db: Session):
     users = []
     for u in users_data:
         hashed = hash_password(u["password"])
-        file_path = os.path.join(UPLOAD_DIR, a["cover_image"])
+        file_path = os.path.join(UPLOAD_DIR, u["avatar"])
         with open(file_path, "wb") as f:
             f.write(b"")  # empty file for demo
         user = User(username=u["username"], email=u["email"], name=u["name"], password=hashed, avatar=file_path)

@@ -8,7 +8,7 @@ from alembic import context
 from dotenv import load_dotenv
 load_dotenv()
 from app.database.session import engine
-from app.core.config import settings
+from app.core.config.app import app_config
 
 # Import Base dan semua models
 from app.database.base import Base
@@ -18,8 +18,8 @@ config = context.config
 
 config.set_main_option(
     "sqlalchemy.url",
-    f"mysql+pymysql://{settings.DB_USERNAME}:{settings.DB_PASSWORD}"
-    f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+    f"mysql+pymysql://{app_config.DB_USERNAME}:{app_config.DB_PASSWORD}"
+    f"@{app_config.DB_HOST}:{app_config.DB_PORT}/{app_config.DB_NAME}"
 )
 
 if config.config_file_name is not None:

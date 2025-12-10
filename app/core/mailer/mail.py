@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from app.dependencies.logger import log
 from .message import Message
-from app.core.config import settings
+from app.core.config.app import app_config
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -60,13 +60,13 @@ class Mail:
 
     @classmethod
     def send(cls):
-        MAIL_HOST = settings.MAIL_HOST
-        MAIL_PORT = settings.MAIL_PORT
-        MAIL_USERNAME = settings.MAIL_USERNAME
-        MAIL_PASSWORD = settings.MAIL_PASSWORD
-        MAIL_ENCRYPTION = settings.MAIL_ENCRYPTION
-        MAIL_FROM_ADDRESS = settings.MAIL_FROM_ADDRESS
-        MAIL_FROM_NAME = settings.MAIL_FROM_NAME
+        MAIL_HOST = app_config.MAIL_HOST
+        MAIL_PORT = app_config.MAIL_PORT
+        MAIL_USERNAME = app_config.MAIL_USERNAME
+        MAIL_PASSWORD = app_config.MAIL_PASSWORD
+        MAIL_ENCRYPTION = app_config.MAIL_ENCRYPTION
+        MAIL_FROM_ADDRESS = app_config.MAIL_FROM_ADDRESS
+        MAIL_FROM_NAME = app_config.MAIL_FROM_NAME
 
         if not cls._message.to_email:
             raise ValueError("Recipient email (to) belum di-set")

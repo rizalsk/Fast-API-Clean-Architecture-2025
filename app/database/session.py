@@ -1,12 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.core.config import settings
+from app.core.config.app import app_config
 from app.models import *
 from .base import Base
 
 DATABASE_URL = (
-    f"mysql+pymysql://{settings.DB_USERNAME}:{settings.DB_PASSWORD}"
-    f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+    f"mysql+pymysql://{app_config.DB_USERNAME}:{app_config.DB_PASSWORD}"
+    f"@{app_config.DB_HOST}:{app_config.DB_PORT}/{app_config.DB_NAME}"
 )
 
 engine = create_engine(DATABASE_URL, echo=True)

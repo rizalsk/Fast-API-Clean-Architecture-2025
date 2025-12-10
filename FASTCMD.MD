@@ -26,7 +26,7 @@ alembic upgrade head
 SEEDER
 
 ```
-python -m app.database.seeder
+python -m app.database.seeders.first_seeder
 ```
 
 RUN

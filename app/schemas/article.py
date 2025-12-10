@@ -7,7 +7,7 @@ class BannerImageSchema(BaseModel):
     file_path: str
     filename: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ArticleCreate(BaseModel):
     title: str
@@ -22,4 +22,4 @@ class ArticleResponse(BaseModel):
     banners: List[BannerImageSchema] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True

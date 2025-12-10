@@ -1,8 +1,5 @@
 import os
 from fastapi import UploadFile, File
-from app.repositories.article_repository import ArticleRepository
-from app.repositories.banner_repository import BannerRepository
-from app.core.config import settings
 from app.models.article import Article
 from app.models.banner_image import BannerImage
 import os

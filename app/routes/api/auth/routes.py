@@ -7,15 +7,15 @@ from app.services.auth_service import AuthService
 from app.services.user_service import UserService
 from app.schemas.auth import LoginSchema, TokenSchema, TokenRefreshRequest, TokenRefreshResponse, LoginTokenSchema
 from app.core.jwt import verify_token
-from app.core.config import settings
+from app.core.config.app import app_config
 from app.repositories.user_repository import UserRepository
 from app.dependencies.logger import log
 from app.dependencies.auth import get_db, get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-ACCESS_EXPIRES = settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
-REFRESH_EXPIRES = settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
+ACCESS_EXPIRES = app_config.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+REFRESH_EXPIRES = app_config.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60
 
 @router.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):

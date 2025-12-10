@@ -3,6 +3,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from fastapi import FastAPI
+from app.core.config.app import app_config
+import uvicorn
+
 from app.routes.web import router as web_router
 from app.routes.api.auth.routes import router as auth_router
 from app.routes.api.v1.article import router as article_router
@@ -17,7 +20,15 @@ from app.database.session import engine
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="FastAPI Clean Architecture")
+app = FastAPI(
+    title=app_config.APP_NAME,
+    description=app_config.APP_DESC,
+    version="1.0.0",
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1},
+    docs_url="/docs", 
+    redoc_url="/redoc"
+)
+
 
 app.include_router(web_router)
 app.include_router(auth_router)
@@ -27,3 +38,12 @@ app.include_router(banner_router)
 app.include_router(email_router)
 
 app.mount("/assets", StaticFiles(directory="app/assets"), name="assets")
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "app.main:app",
+        host=app_config.APP_URL,   # host from .env
+        port=app_config.APP_PORT,      # port from .env
+        reload=True
+    )

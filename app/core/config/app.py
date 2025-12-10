@@ -1,12 +1,13 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    APP_NAME: str
-    APP_URL: str
-    APP_PORT: int
+    APP_NAME: str = "FAST API"
+    APP_DESC: str = "FAST API WEB API"
+    APP_URL: str = "APP FAST API"
+    APP_PORT: int = 5000
     
     DB_HOST: str
-    DB_PORT: int
+    DB_PORT: int = 3360
     DB_USERNAME: str
     DB_PASSWORD: str
     DB_NAME: str
@@ -27,4 +28,4 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
-settings = Settings()
+app_config = Settings()
