@@ -30,15 +30,14 @@ def get_article(
 
 @router.post("")
 async def add_banner(
-    banner_id: int,
     banner: UploadFile,
     current_user: User = Depends(get_current_user),
     article_id: int = Form(None),
     db: Session = Depends(get_db)
 ):
     try:
-        updatedBanner = await BannerService.update_banner(db, banner_id, banner, current_user.id, article_id )
-        return updatedBanner
+        newBanner = await BannerService.add_banner(db, banner, current_user.id, article_id )
+        return newBanner
     except Exception as e:
         log.error("Error while updating banner", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to update banner: {str(e)}")

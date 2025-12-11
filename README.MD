@@ -5,6 +5,7 @@ A production-ready FastAPI backend using SQLAlchemy ORM, Alembic migrations, JWT
 ## Python Version
 
 - Python 3.7.9
+- Pip 24.0
 
 ## 📦 Tech Stack
 
@@ -104,25 +105,52 @@ REFRESH_TOKEN_EXPIRE_DAYS=7
 
 ---
 
+## Available CLI Commands
+
+### Make Commands
+
+| Command                           | Description             |
+| --------------------------------- | ----------------------- |
+| `make:model <model_name>`         | Create a new model.     |
+| `make:migration <migration_name>` | Create a new migration. |
+| `make:module <module_name>`       | Create a new module.    |
+
+### Database Commands
+
+| Command   | Description           |
+| --------- | --------------------- |
+| `db:seed` | Run database seeding. |
+
+---
+
 ## 🗄 Database Setup
 
 ### Run Alembic migrations:
 
+`fastapi db:migrate`
+OR
 `alembic upgrade head`
 
 ### Create a new migration:
 
+`fastapi make:migration <migration_name>`
+OR
 `alembic revision --autogenerate -m "description"`
 
 ---
 
 ### Seeder:
 
+`fastapi db:seed`
 `python -m app.database.seeders.first_seeder`
 
 ---
 
 ## ▶️ Running the Server
+
+`fastapi serve:dev`
+OR
+`fastapi serve:prod`
 
 `uvicorn app.main:app --reload` port: 8000
 or

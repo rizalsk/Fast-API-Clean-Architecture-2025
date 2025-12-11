@@ -7,8 +7,6 @@ from app.models.user import User
 from app.schemas.article import ArticleResponse
 from typing import List
 import os
-from app.core.jwt import verify_token, decode_access_token
-from app.repositories.user_repository import UserRepository
 from app.dependencies.auth import get_db, get_current_user_id, get_current_user
 from app.dependencies.logger import log
 

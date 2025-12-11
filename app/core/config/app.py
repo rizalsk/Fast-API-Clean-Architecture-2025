@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     APP_DESC: str = "FAST API WEB API"
     APP_URL: str = "APP FAST API"
     APP_PORT: int = 5000
+    APP_VERSION: str = "0.1.0"
     
     DB_HOST: str
     DB_PORT: int = 3360

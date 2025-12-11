@@ -1,0 +1,23 @@
+[project]
+name = "fastapi-app"
+version = "0.1.0"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlalchemy",
+    "alembic",
+    "pymysql",
+    "python-dotenv",
+    "python-jose",
+    "passlib",
+    "email-validator",
+    "python-multipart",
+    "typer",
+]
+
+[project.scripts]
+fastapi = "app.cli.main:run"
+
+[build-system]
+requires = ["setuptools>=61", "wheel", "pydantic-settings"]
+build-backend = "setuptools.build_meta"

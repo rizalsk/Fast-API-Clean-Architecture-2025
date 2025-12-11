@@ -6,8 +6,9 @@ source venv/Scripts/activate #bash
 
 pip install fastapi uvicorn sqlalchemy alembic pydantic pydantic-settings \
     pymysql python-jose[cryptography] passlib[bcrypt] python-dotenv \
-    email-validator python-multipart
+    email-validator python-multipart jinja2 typer \
 
+pip install -e .
 ```
 
 env.py database
@@ -26,7 +27,7 @@ alembic upgrade head
 SEEDER
 
 ```
-python -m app.database.seeders.first_seeder
+python -m app.database.seeders.db_seeder
 ```
 
 RUN
@@ -45,4 +46,10 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 5000
  OR
 # bash
 Get-ChildItem -Recurse -Directory -Force -Filter "__pycache__" | Remove-Item -Recurse -Force
+```
+
+Upgrade pip:
+
+```
+python -m pip install --upgrade pip
 ```

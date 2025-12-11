@@ -1,5 +1,5 @@
+# app\database\seeders\first_seeder.py
 from sqlalchemy.orm import Session
-from app.database.session import SessionLocal
 from app.models.user import User
 from app.models.article import Article
 from app.models.banner_image import BannerImage
@@ -78,15 +78,3 @@ def seed_banners(db: Session, articles):
         db.refresh(banner)
     print(f"Seeded {len(banners)} banners")
     return banners
-
-def run_seeder():
-    db = SessionLocal()
-    try:
-        users = seed_users(db)
-        articles = seed_articles(db, users)
-        seed_banners(db, articles)
-    finally:
-        db.close()
-
-if __name__ == "__main__":
-    run_seeder()

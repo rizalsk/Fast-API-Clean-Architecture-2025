@@ -13,6 +13,7 @@ from app.core.config.app import app_config
 # Import Base dan semua models
 from app.database.base import Base
 from app.models import user, article, banner_image
+# from app.modules.permission.models import permission, permission_group, permission_group_permission, role, role_group, role_permission, user_permission, user_role
 
 config = context.config
 
