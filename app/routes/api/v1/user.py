@@ -7,7 +7,7 @@ from core.jwt import verify_token
 from app.dependencies.auth import get_db, get_current_user
 
 router = APIRouter(
-    prefix="/v1/users", 
+    prefix="/users", 
     tags=["Users"],
     dependencies=[Depends(get_current_user)]  #like router-level middleware
 )

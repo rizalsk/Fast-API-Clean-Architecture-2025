@@ -6,7 +6,7 @@ from typing import Optional, List
 from app.services.file_service import UPLOAD_DIR
 import shutil
 
-email_router = APIRouter(prefix="/v1/email-test", tags=["Email-test"])
+email_router = APIRouter(prefix="/email-test", tags=["Email-test"])
 
 @email_router.post("/send-text")
 def send_text_email(data: SendEmailSchema, user_id: int = Depends(get_current_user_id)):

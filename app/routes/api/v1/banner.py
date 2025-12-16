@@ -10,7 +10,7 @@ from app.dependencies.auth import get_db, get_current_user_id, get_current_user
 from app.services.banner_service import BannerService
 from app.dependencies.logger import log
 
-router = APIRouter(prefix="/v1/banners", tags=["banners"])
+router = APIRouter(prefix="/banners", tags=["banners"])
 
 @router.get("", response_model=List[BannerImageResponse])
 def get_all_banners(db: Session = Depends(get_db)):

@@ -12,4 +12,7 @@ email-validator
 python-multipart
 jinja2
 typer
+pytest 
+httpx 
+pytest-asyncio
 -e .

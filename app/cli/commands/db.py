@@ -2,6 +2,7 @@ import typer
 import subprocess
 from app.cli.app import cli
 from app.database.seeders.db_seeder import run_seeder
+from app.modules.permission.database.seeder import run_seeder as permission_seeder
 
 @cli.command("db:seed")
 def seed_all():
@@ -9,6 +10,7 @@ def seed_all():
     typer.echo("🌱 Running all DB seeders...")
     # subprocess.run(["python", "-m", "app.database.seeders.db_seeder"])
     run_seeder()
+    permission_seeder()
     typer.echo("✅ All seeders completed.")
 
 @cli.command("db:migrate")

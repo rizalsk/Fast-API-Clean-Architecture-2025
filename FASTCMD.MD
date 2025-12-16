@@ -7,6 +7,7 @@ source venv/Scripts/activate #bash
 pip install fastapi uvicorn sqlalchemy alembic pydantic pydantic-settings \
     pymysql python-jose[cryptography] passlib[bcrypt] python-dotenv \
     email-validator python-multipart jinja2 typer \
+    pytest httpx pytest-asyncio pytest-benchmark \
 
 pip install -e .
 ```

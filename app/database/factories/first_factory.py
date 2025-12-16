@@ -44,6 +44,24 @@ def seed_articles(db: Session, users):
             "cover_image": 'cover_image2.jpg',
             "author_id": users[1].id
         },
+        {
+            "title": "Big Savings in India Gives Tesla Stock (NASDAQ:TSLA) a Small Boost", 
+            "content": "Electric vehicle giant Tesla (TSLA) is working hard to build interest for its product line in India, and turning to one of the most tried-and-true methods around: pointing out cost savings. It turns out that Indian buyers can recoup about a third of the cost", 
+            "cover_image": 'cover_image3.jpg',
+            "author_id": users[1].id
+        },
+        {
+            "title": "Tesla Picks Suppliers by Quality, Not Country, Executive Says", 
+            "content": "Tesla India aims to differentiate itself from other luxury EV makers through easy Supercharger access, on-the-spot remote diagnostics and practically service-free ownership, according to Shashank Srivastava, head of Tesla India and South Asia. ", 
+            "cover_image": 'cover_image4.jpg',
+            "author_id": users[1].id
+        },
+        {
+            "title": "Cathie Wood Dumps $11.6 Million Worth Of Tesla Stock: Here Is What Ark Purchased Instead", 
+            "content": "On Wednesday, Cathie Wood-led Ark Invest made significant trades involving Tesla Inc. (NASDAQ:TSLA), Coinbase Global Inc. (NASDAQ:COIN), and Deere &amp; Co. (NYSE:DE). These trades were part of Arks … [+140 chars]", 
+            "cover_image": 'cover_image5.jpg',
+            "author_id": users[1].id
+        },
     ]
     articles = []
     for a in articles_data:
@@ -64,6 +82,9 @@ def seed_banners(db: Session, articles):
     banners_data = [
         {"article_id": articles[0].id, "filename": "banner1.jpg"},
         {"article_id": articles[1].id, "filename": "banner2.jpg"},
+        {"article_id": articles[2].id, "filename": "banner3.jpg"},
+        {"article_id": articles[3].id, "filename": "banner4.jpg"},
+        {"article_id": articles[4].id, "filename": "banner5.jpg"},
     ]
     banners = []
     for b in banners_data:

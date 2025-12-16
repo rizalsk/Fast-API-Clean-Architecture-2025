@@ -2,27 +2,27 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 import uvicorn
-import time
+import sys
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.core.config.app import app_config
-from app.core.middleware.http import log_requests
 
-from app.routes.web import router as web_router
-from app.routes.api.auth.routes import router as auth_router
-from app.routes.api.v1.article import router as article_router
-from app.routes.api.v1.user import router as user_router
-from app.routes.api.v1.banner import router as banner_router
-from app.routes.api.v1.email import email_router
-
+# Middleware
+from app.core.middleware.jwt import jwt_middleware
+from app.core.middleware.logger import log_requests
 
 from fastapi.staticfiles import StaticFiles
 
 from app.database.base import Base
 from app.database.session import engine
 
+from app.routes.app import register_routes
+
 Base.metadata.create_all(bind=engine)
 
+# FastAPI Instance
 app = FastAPI(
     title=app_config.APP_NAME,
     description=app_config.APP_DESC,
@@ -32,23 +32,31 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# HTTP Logging Middleware
 @app.middleware("http")
 async def add_log_requests(request, call_next):
     return await log_requests(request, call_next)
 
+# original way
+app.middleware("http")(log_requests)
+app.middleware("http")(jwt_middleware)
 
-app.include_router(web_router)
-app.include_router(auth_router)
-app.include_router(article_router)
-app.include_router(user_router)
-app.include_router(banner_router)
-app.include_router(email_router)
+# Register all routers
+register_routes(app)
 
-# app.include_router(permission_router)
-# app.include_router(permission_subrouter)
-
+# Static Files
 app.mount("/assets", StaticFiles(directory="app/assets"), name="assets")
 
+print([m for m in sys.modules if "permission" in m])
 if __name__ == "__main__":
     uvicorn.run(
         "app.main:app",

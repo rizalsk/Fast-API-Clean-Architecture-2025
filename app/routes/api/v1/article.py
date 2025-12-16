@@ -10,7 +10,7 @@ import os
 from app.dependencies.auth import get_db, get_current_user_id, get_current_user
 from app.dependencies.logger import log
 
-router = APIRouter(prefix="/v1/articles", tags=["articles"])
+router = APIRouter(prefix="/articles", tags=["articles"])
 
 UPLOAD_DIR = "app/assets/uploads/"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
